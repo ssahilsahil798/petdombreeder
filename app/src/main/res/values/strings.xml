@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">Petdom Breeder</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_add">Add</string>
+    <string name="action_save">Save</string>
+    <string name="add_breeder">Add Breeder</string>
+    <string name="add_dog_profile">Add Dog Profile</string>
+    <string name="edit_dog_profile">Edit Dog Profile</string>
+    <string name="edit_breeder">Edit Breeder</string>
+    <string name="dogs_listing">Dogs Listing</string>
+
+    <string name="kennel_name">Kennel Name</string>
+    <string name="city">City</string>
+    <string name="locality">Locality</string>
+    <string name="pin_code">Pin Code</string>
+    <string name="address">Address</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="website">Website</string>
+    <string name="petdom_contact">Petdom Contact</string>
+    <string name="owener_name">Owner\'s Name</string>
+    <string name="year_in_operation">Year In Operation</string>
+    <string name="started_on">Started On</string>
+    <string name="pet_types">Pet Types</string>
+    <string name="breed_types">Breed Types</string>
+    <string name="clinical_services">Clinical Services</string>
+    <string name="vaccination">Vaccination</string>
+    <string name="surgery">Surgery</string>
+    <string name="dentistry">Dentistry</string>
+    <string name="boarding">Boarding</string>
+    <string name="pediegreedpup">Pedigreed pup</string>
+    <string name="training">Training</string>
+    <string name="grooming_centers">Grooming Centers</string>
+    <string name="accessories">Accessories</string>
+    <string name="breeder_scale">Breeder Scale</string>
+    <string-array name="array_breeder_scale">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Big</item>
+    </string-array>
+
+    <string name="dogs_name">Dog\'s Name</string>
+    <string name="gender">Gender</string>
+    <string name="dob">Date Of Birth</string>
+    <string name="age">Age</string>
+    <string name="breed_type">Breed Type</string>
+    <string name="breed">Breed</string>
+    <string name="weight">Weight</string>
+    <string name="height">Height</string>
+    <string name="coat_color">Coat Color</string>
+    <string name="coat_pattern">Coat Pattern</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="listing_type">Listing Type</string>
+    <string name="microchip_number">Microchip Number</string>
+    <string name="birth_certificate_upload">Birth Certificate Upload</string>
+    <string name="vaccination_certificate_upload">Vaccination Certificate Upload</string>
+    <string name="health_history_upload">Health History Upload</string>
+    <string name="symbol_rs">₹</string>
+
+    <string-array name="array_listing_type">
+        <item>Sell</item>
+        <item>Give Away</item>
+    </string-array>
+    <string-array name="array_breed_type">
+        <item>Pure</item>
+        <item>Mixed</item>
+    </string-array>
+    <string-array name="array_gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string name="retry">Retry</string>
+    <string name="no_connection">No Connection</string>
+    <string name="oops_went_wrong">Oops! something went wrong</string>
+    <string name="invalid_response_code">Invalid server response code</string>
+    <string name="lets_create_breeder" >Let\'s create new Breeder!</string>
+    <string name="lets_add_dogs" >Let\'s add new Dogs!</string>
+    <string name="msg_click_add_dog_button" >Click on add button to add Dogs.</string>
+    <string name="msg_click_add_breeder_button" >Click on add button to create Breeder.</string>
+</resources>
