@@ -455,6 +455,7 @@
                 android:src="@drawable/ic_place_holder_image" />
 
             <TextView
+                android:id="@+id/tv_birth_certificate"
                 style="@style/style_text_medium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -483,6 +484,8 @@
                 android:src="@drawable/ic_place_holder_image" />
 
             <TextView
+                android:id="@+id/tv_vaccination_certificate"
+
                 style="@style/style_text_medium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -512,6 +515,7 @@
                 />
 
             <TextView
+                android:id="@+id/tv_health_history"
                 style="@style/style_text_medium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

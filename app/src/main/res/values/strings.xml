@@ -78,4 +78,6 @@
     <string name="lets_add_dogs" >Let\'s add new Dogs!</string>
     <string name="msg_click_add_dog_button" >Click on add button to add Dogs.</string>
     <string name="msg_click_add_breeder_button" >Click on add button to create Breeder.</string>
+    <string name="title_activity_image_preview">ImagePreviewActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>

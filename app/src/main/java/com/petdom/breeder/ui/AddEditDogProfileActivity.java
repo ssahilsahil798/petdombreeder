@@ -12,17 +12,16 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.petdom.breeder.AppConfig;
@@ -56,6 +55,7 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
 
     public static final int POSITION_NONE = -1;
     public static final int TAKE_PHOTO_CODE = 0X1;
+    public static final int PHOTO_PREVIEW = 0X2;
     private static final String KEY_DOG_POSITION = "dog_position";
     private static final String KEY_BREEDER_POSITION = "breeder_position";
     private Breeder breeder;
@@ -100,6 +100,10 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
     private ImageView ivBirth;
     private ImageView ivHealth;
 
+    private TextView tvVaccination;
+    private TextView tvBirth;
+    private TextView tvHealth;
+
     private View rootLayout;
 
     @Override
@@ -141,9 +145,17 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         ivVaccination = (ImageView) rootLayout.findViewById(R.id.iv_vaccination_certificate);
         ivBirth = (ImageView) rootLayout.findViewById(R.id.iv_birth_certificate);
         ivHealth = (ImageView) rootLayout.findViewById(R.id.iv_health_history);
+        tvVaccination = (TextView) rootLayout.findViewById(R.id.tv_vaccination_certificate);
+        tvBirth = (TextView) rootLayout.findViewById(R.id.tv_birth_certificate);
+        tvHealth = (TextView) rootLayout.findViewById(R.id.tv_health_history);
+
         ivBirth.setOnClickListener(this);
         ivHealth.setOnClickListener(this);
         ivVaccination.setOnClickListener(this);
+
+        tvBirth.setOnClickListener(this);
+        tvHealth.setOnClickListener(this);
+        tvVaccination.setOnClickListener(this);
 
 
         //set colors
@@ -473,15 +485,15 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
 
     @Override
     public void onClick(View v) {
-        if (v == ivBirth || v == ivHealth || v == ivVaccination) {
-            onCheckBoxClicked(v.getId());
+        if (v == ivBirth || v == ivHealth || v == ivVaccination || v == tvBirth || v == tvHealth || v == tvVaccination) {
+            onImageClicked(v.getId());
         }
     }
 
-    private void onCheckBoxClicked(int checkboxId) {
+    private void onImageClicked(int imageId) {
         //write photo upload code here
         String key = null;
-        switch (checkboxId) {
+        switch (imageId) {
             case R.id.iv_birth_certificate:
                 key = Photo.KEY_BIRTH_CERTIFICATE;
                 break;
@@ -494,7 +506,21 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
             default:
                 throw new IllegalArgumentException("Invalid checkbox choice!");
         }
-        launchCamera(checkboxId, key);
+
+        int index = -1;
+        for (int i = 0; i < photos.size(); i++) {
+            if (photos.get(i).getId() == imageId) {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1) {
+            //means photo already take, launch full screen preview
+            Photo p = photos.get(index);
+            startActivityForResult(ImagePreviewActivity.createIntent(this, p.getLocalPath(), index), PHOTO_PREVIEW);
+        } else {
+            launchCamera(imageId, key);
+        }
     }
 
     public String getDOB() {
@@ -569,14 +595,32 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
 
                 ImageView iv = (ImageView) rootLayout.findViewById(p.getId());
 
-                Bitmap bmp =null;
-                try{
-                    bmp = UiUtils.scaleImage(p.getLocalPath(),iv.getWidth(),iv.getHeight());
-                }catch (Exception e){
-                    Toast.makeText(this,"Error in creating thumbnail, try again!",Toast.LENGTH_LONG).show();
+                Bitmap bmp = null;
+                try {
+                    bmp = UiUtils.scaleImage(p.getLocalPath(), iv.getWidth(), iv.getHeight());
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error in creating thumbnail, try again!", Toast.LENGTH_LONG).show();
                 }
-                if (bmp!=null){
+                if (bmp != null) {
                     iv.setImageBitmap(bmp);
+                }
+            }
+        } else if (requestCode == PHOTO_PREVIEW && !photos.isEmpty()) {
+            if (resultCode == RESULT_OK) {
+
+                int index = data.getIntExtra(ImagePreviewActivity.KEY_PIC_INDEX, -1);
+                if (index==-1){
+                    return;
+                }
+                Photo p = photos.get(index);
+                photos.remove(index);
+                ImageView iv = (ImageView) rootLayout.findViewById(p.getId());
+                iv.setImageResource(R.drawable.ic_place_holder_image);
+                try{
+                    File f = new File(p.getLocalPath());
+                    f.delete();
+                }catch (Exception e){
+
                 }
             }
         }
