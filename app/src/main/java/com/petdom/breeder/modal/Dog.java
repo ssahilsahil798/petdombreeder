@@ -8,17 +8,12 @@ public class Dog {
 
     private String breed_type;
 
-    private boolean vaccination_certificate;
-
-    private boolean health_history;
 
     private float weight;
 
     private String listing_type;
 
     private double lng;
-
-    private boolean birth_certificate;
 
     private float height;
 
@@ -44,8 +39,8 @@ public class Dog {
 
     private Breeder breeder;
 
-    public Dog(String name,Breeder breeder) {
-        this.breeder=breeder;
+    public Dog(String name, Breeder breeder) {
+        this.breeder = breeder;
         this.name = name;
     }
 
@@ -61,21 +56,6 @@ public class Dog {
         this.breed = breed;
     }
 
-    public boolean isVaccination_certificate() {
-        return vaccination_certificate;
-    }
-
-    public void setVaccination_certificate(boolean vaccination_certificate) {
-        this.vaccination_certificate = vaccination_certificate;
-    }
-
-    public boolean isHealth_history() {
-        return health_history;
-    }
-
-    public void setHealth_history(boolean health_history) {
-        this.health_history = health_history;
-    }
 
     public float getWeight() {
         return weight;
@@ -99,14 +79,6 @@ public class Dog {
 
     public void setLng(double lng) {
         this.lng = lng;
-    }
-
-    public boolean isBirth_certificate() {
-        return birth_certificate;
-    }
-
-    public void setBirth_certificate(boolean birth_certificate) {
-        this.birth_certificate = birth_certificate;
     }
 
     public float getHeight() {

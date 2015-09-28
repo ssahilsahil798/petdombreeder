@@ -5,28 +5,33 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.petdom.breeder.AppConfig;
 import com.petdom.breeder.R;
 import com.petdom.breeder.events.Event;
 import com.petdom.breeder.events.EventManager;
 import com.petdom.breeder.http.InvalidResponseCodeException;
-import com.petdom.breeder.http.operations.CreateBreederOperation;
+import com.petdom.breeder.http.URLConstants;
 import com.petdom.breeder.http.operations.CreateDogOperation;
-import com.petdom.breeder.http.operations.GetBreedersOperation;
 import com.petdom.breeder.http.operations.GetDogBreedsOperation;
 import com.petdom.breeder.http.operations.GetDogColorPatternsOperation;
 import com.petdom.breeder.http.operations.GetDogColorsOperation;
@@ -37,19 +42,24 @@ import com.petdom.breeder.modal.DataController;
 import com.petdom.breeder.modal.Dog;
 import com.petdom.breeder.modal.DogBreedList;
 import com.petdom.breeder.modal.PatternList;
+import com.petdom.breeder.modal.Photo;
 import com.petdom.breeder.utils.BackgroundExecutor;
 import com.petdom.breeder.utils.UiUtils;
 import com.squareup.otto.Subscribe;
 
-import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class AddEditDogProfileActivity extends BreederBaseActivity implements View.OnClickListener {
 
 
     public static final int POSITION_NONE = -1;
+    public static final int TAKE_PHOTO_CODE = 0X1;
     private static final String KEY_DOG_POSITION = "dog_position";
     private static final String KEY_BREEDER_POSITION = "breeder_position";
     private Breeder breeder;
+    private ArrayList<Photo> photos = new ArrayList<>();
 
     public static Intent createIntent(Context context, int breederPosition, int dogPosition) {
         Intent intent = new Intent(context, AddEditDogProfileActivity.class);
@@ -86,9 +96,9 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
     private EditText etPrice;
     private Spinner spListingType;
     private EditText etMicrochipNumber;
-    private CheckBox cbVaccination;
-    private CheckBox cbBirth;
-    private CheckBox cbHealth;
+    private ImageView ivVaccination;
+    private ImageView ivBirth;
+    private ImageView ivHealth;
 
     private View rootLayout;
 
@@ -102,7 +112,7 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         breederPosition = getIntent().getIntExtra(KEY_BREEDER_POSITION, POSITION_NONE);
         dogPosition = getIntent().getIntExtra(KEY_DOG_POSITION, POSITION_NONE);
 
-        if (!DataController.getInstance().getBreeders().isEmpty()){
+        if (!DataController.getInstance().getBreeders().isEmpty()) {
             breeder = DataController.getInstance().getBreeders().get(breederPosition);
         }
         // Setup action bar
@@ -128,12 +138,12 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         etPrice = (EditText) rootLayout.findViewById(R.id.et_price);
         spListingType = (Spinner) rootLayout.findViewById(R.id.sp_listing_types);
         etMicrochipNumber = (EditText) rootLayout.findViewById(R.id.et_microchip_number);
-        cbVaccination = (CheckBox) rootLayout.findViewById(R.id.cb_vaccination_certificate);
-        cbBirth = (CheckBox) rootLayout.findViewById(R.id.cb_birth_certificate);
-        cbHealth = (CheckBox) rootLayout.findViewById(R.id.cb_health_history);
-        cbBirth.setOnClickListener(this);
-        cbHealth.setOnClickListener(this);
-        cbVaccination.setOnClickListener(this);
+        ivVaccination = (ImageView) rootLayout.findViewById(R.id.iv_vaccination_certificate);
+        ivBirth = (ImageView) rootLayout.findViewById(R.id.iv_birth_certificate);
+        ivHealth = (ImageView) rootLayout.findViewById(R.id.iv_health_history);
+        ivBirth.setOnClickListener(this);
+        ivHealth.setOnClickListener(this);
+        ivVaccination.setOnClickListener(this);
 
 
         //set colors
@@ -361,7 +371,7 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         } catch (Exception e) {
 
         }
-        if (ageMM == 0) {
+        if (ageYY == 0 && ageMM == 0) {
             Toast.makeText(this, "Enter age", Toast.LENGTH_SHORT).show();
             etAgeMonth.requestFocus();
             return;
@@ -436,39 +446,55 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
 
         Dog d = new Dog(breeder);
         d.setName(name);
-        d.setGender(spGender.getSelectedItemPosition()==0?"M":"F");
+        d.setGender(spGender.getSelectedItemPosition() == 0 ? "M" : "F");
         d.setDob(getDOB());
         d.setAge(getAge(ageYY, ageMM));
-        d.setBreedType(spBreedType.getSelectedItemPosition()==0?"P":"H");
-        d.setBreed(DataController.getInstance().getDogBreedsList().get(spBreed.getSelectedItemPosition()).getId());
+        d.setBreedType(spBreedType.getSelectedItemPosition() == 0 ? "P" : "H");
+        d.setBreed("/api/" + URLConstants.RESOURCE_DOGBREED + DataController.getInstance().getDogBreedsList().get(spBreed.getSelectedItemPosition()).getId() + "/");
         d.setWeight(weight);
         d.setHeight(height);
         d.setColor(color);
         d.setPattern(coatPattern);
-        d.setDescription(etDescription.getText().toString().trim());
-        d.setListing_type(spListingType.getSelectedItemPosition()==0?"S":"A");
+        String desc = etDescription.getText().toString().trim();
+        d.setDescription(TextUtils.isEmpty(desc) ? null : desc);
+        d.setListing_type(spListingType.getSelectedItemPosition() == 0 ? "S" : "A");
         d.setPrice(price);
         d.setLat(AppPreferences.getInstance().getLatitude());
         d.setLng(AppPreferences.getInstance().getLongitude());
+        d.setMicrochip_number(microchip);
 
         showProgressDialog("Please wait...");
-        BackgroundExecutor.getInstance().run(new CreateDogOperation(d));
+        BackgroundExecutor.getInstance().run(new CreateDogOperation(d, photos));
     }
 
     private int getAge(int ageYY, int ageMM) {
-        return ((ageYY*12) + ageMM);
+        return ((ageYY * 12) + ageMM);
     }
 
     @Override
     public void onClick(View v) {
-        if (v == cbBirth || v == cbHealth || v == cbVaccination) {
+        if (v == ivBirth || v == ivHealth || v == ivVaccination) {
             onCheckBoxClicked(v.getId());
         }
     }
 
     private void onCheckBoxClicked(int checkboxId) {
         //write photo upload code here
-
+        String key = null;
+        switch (checkboxId) {
+            case R.id.iv_birth_certificate:
+                key = Photo.KEY_BIRTH_CERTIFICATE;
+                break;
+            case R.id.iv_health_history:
+                key = Photo.KEY_HEALTH_HISTORY;
+                break;
+            case R.id.iv_vaccination_certificate:
+                key = Photo.KEY_VACCINATION_CERTIFICATE;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid checkbox choice!");
+        }
+        launchCamera(checkboxId, key);
     }
 
     public String getDOB() {
@@ -476,21 +502,85 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         String dd = etDOBDay.getText().toString().trim();
         String mm = etDOBMonth.getText().toString().trim();
         String yy = etDOBYear.getText().toString().trim();
-        if (TextUtils.isEmpty(dd) || dd.equals("0") || dd.equals("00") || TextUtils.isEmpty(mm) || mm.equals("0") || mm.equals("00") || TextUtils.isEmpty(yy) || yy.length()<4 || yy.equals("0000"))
-        {
-            return "";
+        if (TextUtils.isEmpty(dd) || dd.equals("0") || dd.equals("00") || TextUtils.isEmpty(mm) || mm.equals("0") || mm.equals("00") || TextUtils.isEmpty(yy) || yy.length() < 4 || yy.equals("0000")) {
+            return null;
         }
-        if (mm.length()==1){
+        if (mm.length() == 1) {
             sb.append('0');
         }
         sb.append(mm);
         sb.append('-');
-        if (dd.length()==1){
+        if (dd.length() == 1) {
             sb.append('0');
         }
         sb.append(dd);
         sb.append('-');
         sb.append(yy);
-        return  sb.toString();
+        return sb.toString();
+    }
+
+    private void launchCamera(int checkboxId, String key) {
+        final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + AppConfig.NAME_APP_FOLDER + "/";
+        File newdir = new File(dir);
+        newdir.mkdirs();
+
+        String file = dir + AppConfig.NAME_PICS + "_" + System.currentTimeMillis() + ".jpg";
+        File newfile = new File(file);
+        try {
+            newfile.createNewFile();
+        } catch (IOException e) {
+        }
+
+        Uri outputFileUri = Uri.fromFile(newfile);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+        startActivityForResult(cameraIntent, TAKE_PHOTO_CODE);
+
+        if (photos == null) {
+            photos = new ArrayList<>();
+        }
+        photos.add(new Photo(checkboxId, key, file));
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TAKE_PHOTO_CODE && !photos.isEmpty()) {
+            if (resultCode != RESULT_OK) {
+
+                int index = photos.size() - 1;
+                Photo p = photos.get(index);
+                photos.remove(index);
+                ImageView iv = (ImageView) rootLayout.findViewById(p.getId());
+                iv.setImageResource(R.drawable.ic_place_holder_image);
+            } else {
+
+
+                Photo p = photos.get(photos.size() - 1);
+
+                //start media scan to new pic into the pic gallery
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                File f = new File(p.getLocalPath());
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+
+                ImageView iv = (ImageView) rootLayout.findViewById(p.getId());
+
+                Bitmap bmp =null;
+                try{
+                    bmp = UiUtils.scaleImage(p.getLocalPath(),iv.getWidth(),iv.getHeight());
+                }catch (Exception e){
+                    Toast.makeText(this,"Error in creating thumbnail, try again!",Toast.LENGTH_LONG).show();
+                }
+                if (bmp!=null){
+                    iv.setImageBitmap(bmp);
+                }
+            }
+        }
+
+
     }
 }

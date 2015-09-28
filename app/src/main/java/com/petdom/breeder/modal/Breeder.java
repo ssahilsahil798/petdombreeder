@@ -287,6 +287,11 @@ public class Breeder {
     }
 
     public void setDogs(ArrayList<Dog> dogs) {
+        if (dogs!=null){
+            for (int i=0;i<dogs.size();i++){
+                dogs.get(i).setBreeder(this);
+            }
+        }
         this.dogs = dogs;
     }
 

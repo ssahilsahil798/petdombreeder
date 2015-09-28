@@ -71,6 +71,14 @@ public class DogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
             vh.tvName.setText(dogs.get(position).getName());
+            if (dogs.get(position).getAge()==0){
+                vh.tvAge.setText("");
+            }else{
+
+                vh.tvAge.setText(String.valueOf(dogs.get(position).getAge())+" M");
+            }
+            vh.tvKennel.setText(dogs.get(position).getBreeder().getName());
+            vh.tvChip.setText(dogs.get(position).getMicrochip_number());
 
         }
         else{
@@ -87,12 +95,20 @@ public class DogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static class DogViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
+        TextView tvAge;
+        TextView tvKennel;
+        TextView tvChip;
+
         View root;
 
         public DogViewHolder(View root) {
             super(root);
             this.root = root;
             tvName = (TextView) root.findViewById(R.id.tv_name);
+            tvAge = (TextView) root.findViewById(R.id.tv_age);
+            tvKennel = (TextView) root.findViewById(R.id.tv_kennel);
+            tvChip = (TextView) root.findViewById(R.id.tv_chip_number);
+
         }
     }
 

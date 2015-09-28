@@ -11,6 +11,8 @@ import com.petdom.breeder.http.URLConstants;
 import com.petdom.breeder.modal.Breeder;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,11 +34,15 @@ public class CreateBreederOperation extends Operation {
 
     @Override
     public void run() {
-        String url = URLConstants.URL_GET_BREEDERS + "/?" + URLConstants.URL_DEFAULT_PARAMS_V2;
+        String url = URLConstants.URL_GET_BREEDERS + "?" + URLConstants.URL_DEFAULT_PARAMS_V2;
 
         try {
             Gson gson=new Gson();
             String body = gson.toJson(breeder, Breeder.class);
+
+            JSONObject js = new JSONObject(body);
+            js.remove("id");
+            body = js.toString();
 
             HashMap<String, String> headers = new HashMap<>();
             headers.put("Content-Type", "application/json");

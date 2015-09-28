@@ -89,9 +89,9 @@
                 style="@style/style_text_medium"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
+                android:hint="dd"
                 android:inputType="number"
-                android:maxLength="2"
-                android:hint="dd" />
+                android:maxLength="2" />
 
             <TextView
                 style="@style/style_text_medium"
@@ -106,9 +106,9 @@
                 style="@style/style_text_medium"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
+                android:hint="mm"
                 android:inputType="number"
-                android:maxLength="2"
-                android:hint="mm" />
+                android:maxLength="2" />
 
             <TextView
                 style="@style/style_text_medium"
@@ -123,8 +123,8 @@
                 style="@style/style_text_medium"
                 android:layout_width="55dp"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:hint="yyyy"
+                android:inputType="number"
                 android:maxLength="4" />
         </LinearLayout>
 
@@ -149,8 +149,8 @@
                 style="@style/style_text_medium"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:hint="yy"
+                android:inputType="number"
                 android:maxLength="2" />
 
             <TextView
@@ -166,9 +166,9 @@
                 style="@style/style_text_medium"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
+                android:hint="mm"
                 android:inputType="number"
-                android:maxLength="2"
-                android:hint="mm" />
+                android:maxLength="2" />
         </LinearLayout>
 
         <LinearLayout
@@ -433,36 +433,94 @@
                 android:layout_width="@dimen/width_edit_text"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:inputType="number" />
+                android:inputType="text" />
 
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/cb_birth_certificate"
-            style="@style/style_text_medium"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
-            android:layout_marginBottom="5dp"
-            android:text="@string/birth_certificate_upload" />
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
-        <CheckBox
-            android:id="@+id/cb_vaccination_certificate"
-            style="@style/style_text_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
-            android:layout_marginBottom="5dp"
-            android:text="@string/vaccination_certificate_upload" />
+            <ImageView
+                android:id="@+id/iv_birth_certificate"
+                style="@style/style_text_medium"
+                android:layout_width="@dimen/dim_image_thumbnail"
+                android:layout_height="@dimen/dim_image_thumbnail"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_place_holder_image" />
 
-        <CheckBox
-            android:id="@+id/cb_health_history"
-            style="@style/style_text_medium"
-            android:layout_width="wrap_content"
+            <TextView
+                style="@style/style_text_medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="@string/birth_certificate_upload"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
-            android:layout_marginBottom="5dp"
-            android:text="@string/health_history_upload" />
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <ImageView
+                android:id="@+id/iv_vaccination_certificate"
+                style="@style/style_text_medium"
+                android:layout_width="@dimen/dim_image_thumbnail"
+                android:layout_height="@dimen/dim_image_thumbnail"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_place_holder_image" />
+
+            <TextView
+                style="@style/style_text_medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:text="@string/vaccination_certificate_upload" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <ImageView
+                android:id="@+id/iv_health_history"
+                style="@style/style_text_medium"
+                android:layout_width="@dimen/dim_image_thumbnail"
+                android:layout_height="@dimen/dim_image_thumbnail"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_place_holder_image"
+                />
+
+            <TextView
+                style="@style/style_text_medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:text="@string/health_history_upload" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -3,5 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="width_edit_text">100dp</dimen>
+    <dimen name="dim_image_thumbnail">70dp</dimen>
+
 
 </resources>
