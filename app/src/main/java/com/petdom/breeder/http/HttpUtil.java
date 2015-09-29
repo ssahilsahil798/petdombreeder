@@ -1,8 +1,10 @@
 package com.petdom.breeder.http;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.petdom.breeder.modal.Photo;
+import com.petdom.breeder.utils.UiUtils;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -10,6 +12,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,7 +81,7 @@ public class HttpUtil {
     }
 
 
-    public static Response multipart(String url, HashMap<String, String> headers, String requestJson,ArrayList<Photo> photos) throws IOException {
+    public static Response multipart(String url, HashMap<String, String> headers, String requestJson, ArrayList<Photo> photos) throws IOException {
 
         Log.d(TAG, url);
         Log.d(TAG, requestJson);
@@ -89,11 +92,16 @@ public class HttpUtil {
 
         multipartBuilder.addPart(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), requestJson));
 
-        for (int i=0;i<photos.size();i++){
+        for (int i = 0; i < photos.size(); i++) {
 
             File file = new File(photos.get(i).getLocalPath());
-            multipartBuilder.addFormDataPart(photos.get(i).getKey(), file.getName(),
-                    RequestBody.create(MediaType.parse("image/jpg"), file));
+            Bitmap bmp = UiUtils.scaleImage(photos.get(i).getLocalPath(), 640, 480);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG,100,bos);
+            byte[]data = bos.toByteArray();
+             multipartBuilder.addFormDataPart(photos.get(i).getKey(), file.getName(),
+                     RequestBody.create(MediaType.parse("image/jpg"),data,0,data.length));
+
 
         }
 
@@ -105,7 +113,6 @@ public class HttpUtil {
 
         //add body post data
         builder.post(requestBody);
-
 
 
 //        //add headers
