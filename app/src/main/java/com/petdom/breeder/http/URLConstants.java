@@ -9,7 +9,7 @@ import com.petdom.breeder.modal.DataController;
 public class URLConstants {
 
     private static final String BASE_URL_DEVELOPMENT="http://169.54.252.164:8000/api/";
-    private static final String BASE_URL_PRODUCTION="http://169.54.252.164:8000/api/";
+    private static final String BASE_URL_PRODUCTION="http://169.54.252.164/api/";
     public static final String BASE_URL= AppConfig.APP_PRODUCTION?BASE_URL_PRODUCTION:BASE_URL_DEVELOPMENT;
 
     public static final String RESOURCE_DOGBREED = "v1/dogbreed/";
@@ -20,6 +20,7 @@ public class URLConstants {
     public static final String URL_GET_DOG_COLOR_PATTERNS = BASE_URL +"v1/dogpatterns/";
     public static final String URL_CREATE_DOG = BASE_URL +"v1/dog/";
     public static final String URL_GET_DOGS = BASE_URL +"v1/dog/breederdogs/";
+    public static final String URL_UPLOAD_CERTIFICATES = BASE_URL +"v1/dog/dogcerts/";
 
 
 

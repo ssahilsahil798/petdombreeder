@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.petdom.breeder.http.PhotoUploader;
 import com.petdom.breeder.http.operations.GetDogBreedsOperation;
 import com.petdom.breeder.http.operations.GetDogColorPatternsOperation;
 import com.petdom.breeder.http.operations.GetDogColorsOperation;
@@ -35,8 +36,15 @@ public class BreederApplication extends Application {
         instance = this;
 
         //create default user
-        User user = DataController.getInstance().createUser("ppp3","");
-        user.setApiKey("170a41767f6ba69112aa51629e65490266110c7a");
+        if (AppConfig.APP_PRODUCTION){
+            User user = DataController.getInstance().createUser("apiuser","");
+            user.setApiKey("304130121297b06377293215977b68183493a771");
+
+        }else {
+
+            User user = DataController.getInstance().createUser("ppp3","");
+            user.setApiKey("170a41767f6ba69112aa51629e65490266110c7a");
+        }
 
         //Init handler for UI posts
         handler= new Handler(Looper.getMainLooper());
@@ -48,6 +56,8 @@ public class BreederApplication extends Application {
         operation.add(new GetDogColorsOperation());
         operation.add(new GetDogColorPatternsOperation());
         BackgroundExecutor.getInstance().run(operation);
+
+        PhotoUploader.getInstance().prepare();
 
 
 

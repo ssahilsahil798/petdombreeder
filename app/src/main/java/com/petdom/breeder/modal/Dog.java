@@ -4,10 +4,11 @@ package com.petdom.breeder.modal;
  * Created by diwakar.mishra on 9/22/2015.
  */
 public class Dog {
+    private int id;
+
     private String breed;
 
     private String breed_type;
-
 
     private float weight;
 
@@ -183,5 +184,13 @@ public class Dog {
 
     public void setBreedType(String breed_type) {
         this.breed_type = breed_type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

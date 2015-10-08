@@ -451,7 +451,7 @@
                 style="@style/style_text_medium"
                 android:layout_width="@dimen/dim_image_thumbnail"
                 android:layout_height="@dimen/dim_image_thumbnail"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_place_holder_image" />
 
             <TextView
@@ -480,7 +480,7 @@
                 style="@style/style_text_medium"
                 android:layout_width="@dimen/dim_image_thumbnail"
                 android:layout_height="@dimen/dim_image_thumbnail"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_place_holder_image" />
 
             <TextView
@@ -510,7 +510,7 @@
                 style="@style/style_text_medium"
                 android:layout_width="@dimen/dim_image_thumbnail"
                 android:layout_height="@dimen/dim_image_thumbnail"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_place_holder_image"
                 />
 

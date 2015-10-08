@@ -6,10 +6,10 @@ import java.io.Serializable;
  * Created by diwakar.mishra on 9/27/2015.
  */
 public class Photo{
-    public static final int STATUS_QUEUED = 0;
-    public static final int STATUS_UPLOADED = 1;
-    public static final int STATUS_FAILED = 2;
-    public static final int STATUS_NOT_FOUND = 3;
+    public static final int STATUS_NONE = 0;
+    public static final int STATUS_UPLOADING = 1;
+    public static final int STATUS_UPLOADED = 2;
+    public static final int STATUS_FAILED = 3;
 
     public static final String KEY_BIRTH_CERTIFICATE="birth_certificate";
     public static final String KEY_VACCINATION_CERTIFICATE="vaccination_certificate";
@@ -19,6 +19,8 @@ public class Photo{
     private String localPath;
     private String key;
     private int status;
+    private int breederId;
+    private int dogId;
 
     public Photo(int id,String key, String localPath) {
         this.id = id;
@@ -53,16 +55,31 @@ public class Photo{
             return false;
         }
         Photo p = (Photo) o;
-        return p.id == this.id;
+        return p.getLocalPath().equals(getLocalPath());
     }
 
     @Override
     public int hashCode() {
-        return (id + localPath).hashCode();
+        return (getId() + getLocalPath()).hashCode();
     }
 
     public int getId() {
         return id;
     }
 
+    public int getBreederId() {
+        return breederId;
+    }
+
+    public void setBreederId(int breederId) {
+        this.breederId = breederId;
+    }
+
+    public int getDogId() {
+        return dogId;
+    }
+
+    public void setDogId(int dogId) {
+        this.dogId = dogId;
+    }
 }

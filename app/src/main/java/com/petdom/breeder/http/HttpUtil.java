@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by diwakar.mishra on 9/24/2015.
@@ -81,29 +82,24 @@ public class HttpUtil {
     }
 
 
-    public static Response multipart(String url, HashMap<String, String> headers, String requestJson, ArrayList<Photo> photos) throws IOException {
+    public static Response upload(String url, Photo photo) throws IOException {
 
         Log.d(TAG, url);
-        Log.d(TAG, requestJson);
-
 
         MultipartBuilder multipartBuilder = new MultipartBuilder()
                 .type(MultipartBuilder.FORM);
 
-        multipartBuilder.addPart(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), requestJson));
 
-        for (int i = 0; i < photos.size(); i++) {
+        Bitmap bmp = UiUtils.scaleImage(photo.getLocalPath(), 640, 640);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+        byte[]data = bos.toByteArray();
+        bos.close();
+        Log.d(TAG,"IMAGE: "+photo.getKey()+"  SIZE= "+(data.length/1024)+" KB");
 
-            File file = new File(photos.get(i).getLocalPath());
-            Bitmap bmp = UiUtils.scaleImage(photos.get(i).getLocalPath(), 640, 480);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG,100,bos);
-            byte[]data = bos.toByteArray();
-             multipartBuilder.addFormDataPart(photos.get(i).getKey(), file.getName(),
-                     RequestBody.create(MediaType.parse("image/jpg"),data,0,data.length));
-
-
-        }
+        File file = new File(photo.getLocalPath());
+        multipartBuilder.addFormDataPart(photo.getKey(), file.getName(),
+                     RequestBody.create(MediaType.parse("image/jpeg"),data,0,data.length));
 
         RequestBody requestBody = multipartBuilder.build();
 
@@ -115,21 +111,12 @@ public class HttpUtil {
         builder.post(requestBody);
 
 
-//        //add headers
-//        if (headers != null && headers.size() > 0) {
-//            Set<Map.Entry<String, String>> entries = headers.entrySet();
-//            Iterator<Map.Entry<String, String>> iterator = entries.iterator();
-//            while (iterator.hasNext()) {
-//                Map.Entry<String, String> entry = iterator.next();
-//                builder.addHeader(entry.getKey(), entry.getValue());
-//            }
-//        }
-
         Request request = builder.build();
         Response response = HTTP_CLIENT.newCall(request).execute();
         Log.d(TAG, response.toString());
         return response;
     }
+
 
 
 }

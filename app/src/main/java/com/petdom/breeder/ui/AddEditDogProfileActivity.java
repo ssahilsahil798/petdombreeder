@@ -29,6 +29,7 @@ import com.petdom.breeder.R;
 import com.petdom.breeder.events.Event;
 import com.petdom.breeder.events.EventManager;
 import com.petdom.breeder.http.InvalidResponseCodeException;
+import com.petdom.breeder.http.PhotoUploader;
 import com.petdom.breeder.http.URLConstants;
 import com.petdom.breeder.http.operations.CreateDogOperation;
 import com.petdom.breeder.http.operations.GetDogBreedsOperation;
@@ -221,7 +222,6 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         if (event.isSuccess()) {
             DogBreedList list = (DogBreedList) event.getData();
             setupBreedTypeList(list);
-
         }
     }
 
@@ -230,6 +230,17 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
     private void onCreateNewDogEvent(Event event) {
         hideProgressDialog();
         if (event.isSuccess()) {
+            if (event.getData() != null) {
+                int id = (Integer) event.getData();
+                if (photos != null && photos.size()>0) {
+                    for (int i = 0; i < photos.size(); i++) {
+                        photos.get(i).setDogId(id);
+                    }
+                    //call photo upload operation
+                    DataController.getInstance().savePhotos(photos);
+                    PhotoUploader.getInstance().prepare();
+                }
+            }
             setResult(RESULT_OK);
             finish();
         } else {
@@ -476,7 +487,7 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         d.setMicrochip_number(microchip);
 
         showProgressDialog("Please wait...");
-        BackgroundExecutor.getInstance().run(new CreateDogOperation(d, photos));
+        BackgroundExecutor.getInstance().run(new CreateDogOperation(d));
     }
 
     private int getAge(int ageYY, int ageMM) {
@@ -495,12 +506,15 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         String key = null;
         switch (imageId) {
             case R.id.iv_birth_certificate:
+            case R.id.tv_birth_certificate:
                 key = Photo.KEY_BIRTH_CERTIFICATE;
                 break;
             case R.id.iv_health_history:
+            case R.id.tv_health_history:
                 key = Photo.KEY_HEALTH_HISTORY;
                 break;
             case R.id.iv_vaccination_certificate:
+            case R.id.tv_vaccination_certificate:
                 key = Photo.KEY_VACCINATION_CERTIFICATE;
                 break;
             default:
@@ -566,8 +580,9 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
         if (photos == null) {
             photos = new ArrayList<>();
         }
-        photos.add(new Photo(checkboxId, key, file));
-
+        Photo photo = new Photo(checkboxId, key, file);
+        photo.setBreederId(breeder.getId());
+        photos.add(photo);
     }
 
     @Override
@@ -609,17 +624,17 @@ public class AddEditDogProfileActivity extends BreederBaseActivity implements Vi
             if (resultCode == RESULT_OK) {
 
                 int index = data.getIntExtra(ImagePreviewActivity.KEY_PIC_INDEX, -1);
-                if (index==-1){
+                if (index == -1) {
                     return;
                 }
                 Photo p = photos.get(index);
                 photos.remove(index);
                 ImageView iv = (ImageView) rootLayout.findViewById(p.getId());
                 iv.setImageResource(R.drawable.ic_place_holder_image);
-                try{
+                try {
                     File f = new File(p.getLocalPath());
                     f.delete();
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }

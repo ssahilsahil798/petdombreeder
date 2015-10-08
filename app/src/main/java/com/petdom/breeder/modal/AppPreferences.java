@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.petdom.breeder.BreederApplication;
 
 /**
@@ -14,9 +15,35 @@ public class AppPreferences {
     private static final String NAME = "pref_breeder_app";
     private static AppPreferences _instance;
 
+    public void savePics(PhotoList list) {
+        try {
+            Gson gson = new Gson();
+            String str = gson.toJson(list, PhotoList.class);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(Keys.PHOTOS.getLabel(),
+                    str);
+            editor.commit();
+        } catch (Exception e) {
+            Log.e(TAG,
+                    "Unable to save photos",
+                    e);
+        }
+
+    }
+
+    public PhotoList load() {
+        String data = preferences.getString(Keys.PHOTOS.getLabel(), "na");
+        if (data.equals("na")) {
+            return new PhotoList();
+        }
+        Gson gson = new Gson();
+        PhotoList list = gson.fromJson(data, PhotoList.class);
+        return list;
+    }
+
     private enum Keys {
 
-        LATTITUDE("lat"), LONGITUDE("lng");
+        PHOTOS("photos"), LATTITUDE("lat"), LONGITUDE("lng");
         private String label;
 
         private Keys(String label) {
@@ -193,9 +220,11 @@ public class AppPreferences {
         }
 
     }
+
     public double getLatitude() {
         return Double.parseDouble(preferences.getString(Keys.LATTITUDE.getLabel(), "0.0"));
     }
+
     public double getLongitude() {
         return Double.parseDouble(preferences.getString(Keys.LONGITUDE.getLabel(), "0.0"));
     }

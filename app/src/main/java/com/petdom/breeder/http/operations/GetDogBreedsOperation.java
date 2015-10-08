@@ -25,7 +25,7 @@ public class GetDogBreedsOperation extends Operation {
 
     @Override
     public void run() {
-        String url = URLConstants.URL_GET_DOG_BREEDS + "?" + URLConstants.URL_DEFAULT_PARAMS_V1;
+        String url = URLConstants.URL_GET_DOG_BREEDS + "?" + URLConstants.URL_DEFAULT_PARAMS_V1+"&limit=300";
 
         try {
             HashMap<String, String> headers = new HashMap<>();
