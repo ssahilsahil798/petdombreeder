@@ -1,4 +1,10 @@
 <resources>
+    <string name="input_layout"></string>
+    <string name="input_layout_password"></string>
+    <string name="breederAccess">signup</string>
+    <string name="register">REGISTER</string>
+    <string name="breeder_email">Email</string>
+    <string name="breeder_password">password</string>
     <string name="app_name">Petdom Breeder</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_add">Add</string>
@@ -80,4 +86,5 @@
     <string name="msg_click_add_breeder_button" >Click on add button to create Breeder.</string>
     <string name="title_activity_image_preview">ImagePreviewActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_login">loginActivity</string>
 </resources>
