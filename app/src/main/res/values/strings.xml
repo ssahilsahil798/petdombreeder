@@ -1,10 +1,12 @@
 <resources>
     <string name="input_layout"></string>
     <string name="input_layout_password"></string>
-    <string name="breederAccess">signup</string>
+    <string name="breederAccess">LOGIN</string>
     <string name="register">REGISTER</string>
     <string name="breeder_email">Email</string>
-    <string name="breeder_password">password</string>
+    <string name="breeder_name">Breeder name</string>
+    <string name="input_layout_contact">    </string>
+    <string name="breeder_contact">    Contact/Phone Number</string>
     <string name="app_name">Petdom Breeder</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_add">Add</string>

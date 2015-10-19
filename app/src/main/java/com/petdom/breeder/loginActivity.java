@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.petdom.breeder.ui.AddBreederActivity;
 import com.petdom.breeder.ui.BreederListActivity;
 
 
@@ -19,7 +20,7 @@ public class loginActivity extends AppCompatActivity {
 
 
     public void giveAccess(View view) {
-        Intent intent = new Intent(this, BreederListActivity.class);
+        Intent intent = new Intent(this, AddBreederActivity.class);
         startActivity(intent);
     }
 }
